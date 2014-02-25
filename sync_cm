@@ -15,22 +15,47 @@ OPTIONS:
 EOF
 }
 
+NAME=$(basename $0)
 NOSLEEP=
+DISABLE=
+ENABLE=
 
-while getopts "sh" options; do
+while getopts "desh" options; do
     case $options in
         s) NOSLEEP=1;;
         h) usage; exit 0;;
+        d) DISABLE=1 ;;
+        e) ENABLE=1 ;;
         *) usage; exit 1;;
     esac
 done
 
-trap "rm -f $HOME/sync_cm.pid" EXIT
-echo $$ >$HOME/sync_cm.pid
+DISABLE_MARKER=$HOME/$NAME.disabled
+
+if [[ -n $ENABLE ]]; then
+    rm -fv $DISABLE_MARKER
+    echo "Script '$NAME' enabled..."
+    exit 0
+fi
+
+if [[ -n $DISABLE ]]; then
+    touch $DISABLE_MARKER
+    ls -l $DISABLE_MARKER
+    echo "Script '$NAME' disabled..."
+    exit 0
+fi
+
+trap "rm -f $HOME/$NAME.pid" EXIT
+echo $$ >$HOME/$NAME.pid
 
 sleep_interval=$((60+RANDOM%6*60))
 
-echo "*** Script 'sync_cm' running: $(date)" | tee -a $HOME/repo_sync.log
+echo "*** Script '$NAME' running: $(date)" | tee -a $HOME/repo_sync.log
+
+if [[ -f $DISABLE_MARKER ]]; then
+    echo ">>> Script is disabled, please run \`$0 -e' to re-enable..." | tee -a $HOME/repo_sync.log
+    exit 0
+fi
 
 if [[ -z $NOSLEEP ]]; then
     echo ">>> Sleeping for $sleep_interval seconds..." | tee -a $HOME/repo_sync.log
@@ -41,3 +66,5 @@ echo ">>> Launching repo sync..." | tee -a $HOME/repo_sync.log
 
 cd $HOME/cm
 $HOME/bin/repo sync -c 2>&1 | tee -a $HOME/repo_sync.log
+
+# vim: ts=4:et:sts=4:
