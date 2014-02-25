@@ -1,0 +1,43 @@
+#!/bin/bash
+
+usage() {
+cat << EOF
+usage: $0 [<OPTIONS>]
+
+Cron script for synchronizing a local CynogenMod repo.
+
+By default, the script sleep between 1 and 7 minutes prior to starting a sync
+operation.
+
+OPTIONS:
+   -s   Don't sleep, for testing
+   -h   Show this message.
+EOF
+}
+
+NOSLEEP=
+
+while getopts "sh" options; do
+    case $options in
+        s) NOSLEEP=1;;
+        h) usage; exit 0;;
+        *) usage; exit 1;;
+    esac
+done
+
+trap "rm -f $HOME/sync_cm.pid" EXIT
+echo $$ >$HOME/sync_cm.pid
+
+sleep_interval=$((60+RANDOM%6*60))
+
+echo "*** Script 'sync_cm' running: $(date)" | tee -a $HOME/repo_sync.log
+
+if [[ -z $NOSLEEP ]]; then
+    echo ">>> Sleeping for $sleep_interval seconds..." | tee -a $HOME/repo_sync.log
+    sleep $sleep_interval
+fi
+
+echo ">>> Launching repo sync..." | tee -a $HOME/repo_sync.log
+
+cd $HOME/cm
+$HOME/bin/repo sync -c 2>&1 | tee -a $HOME/repo_sync.log
