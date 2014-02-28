@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <manifest>
     <project path="vendor/sony" name="TheMuppets/proprietary_vendor_sony" />
     <project path="external/iw" name="cozybit/iw" />

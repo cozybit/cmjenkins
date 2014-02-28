@@ -3,4 +3,5 @@
 !build*.sh
 !.repo
 !./jenkins_*
+!./local_manifest.xml
 !bin/repo
