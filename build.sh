@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export BUILD_WITH_COLORS=0
-export PATH=$PWD/bin:$PATH
+export PATH=$PWD/bin:$HOME/git:$PATH
 
 eval `ssh-agent`
 trap "kill $SSH_AGENT_PID" EXIT
