@@ -12,6 +12,6 @@ find . -maxdepth 1 -not \( \
   -name 'local_manifest.xml' -or \
   -name 'envsetup.sh' -or \
   -name '.gitignore' \) \
-  -exec echo rm -rf {} \;
+  -exec rm -rf {} \;
 
 repo init -u /cyanogenmod/cm/cozybit/android.git -b cm-10.2
