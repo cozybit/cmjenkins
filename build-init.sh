@@ -10,6 +10,7 @@ find . -maxdepth 1 -not \( \
   -name 'bin' -or \
   -name '.git' -or \
   -name 'local_manifest.xml' -or \
+  -name 'envsetup.sh' -or \
   -name '.gitignore' \) \
   -exec echo rm -rf {} \;
 

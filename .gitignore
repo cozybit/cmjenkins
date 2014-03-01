@@ -5,3 +5,4 @@
 !./jenkins_*
 !./local_manifest.xml
 !bin/repo
+!./envsetup.sh
