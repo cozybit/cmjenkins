@@ -1,0 +1,85 @@
+#!/bin/bash
+
+usage() {
+cat << EOF
+usage: $0 [<OPTIONS>]
+
+Cron script for synchronizing a local CynogenMod repo.
+
+By default, the script sleep between 1 and 7 minutes prior to starting a sync
+operation.
+
+OPTIONS:
+   -s   Don't sleep, for testing
+   -d   Disable this script from running when invoked
+   -e   Enable this script to run when invoked
+   -k   Kill this script if it is running
+   -h   Show this message.
+EOF
+}
+
+NAME=$(basename $0)
+NOSLEEP=
+DISABLE=
+ENABLE=
+
+while getopts "deskh" options; do
+    case $options in
+        s) NOSLEEP=1;;
+        h) usage; exit 0;;
+        k) KILL_RUNNING=1 ;;
+        d) DISABLE=1 ;;
+        e) ENABLE=1 ;;
+        *) usage; exit 1;;
+    esac
+done
+
+DISABLE_MARKER=$HOME/$NAME.disabled
+PID_FILE=$HOME/$NAME.pid
+
+if [[ -n $KILL_RUNNING ]]; then
+    if [[ -e $PID_FILE ]]; then
+        kill `cat $PID_FILE`
+        echo ">>> Script '$NAME' killed..."
+    else
+        echo ">>> Found no script '$NAME' running..."
+    fi
+    exit 0
+fi
+
+if [[ -n $ENABLE ]]; then
+    rm -fv $DISABLE_MARKER
+    echo ">>> Script '$NAME' enabled..."
+    exit 0
+fi
+
+if [[ -n $DISABLE ]]; then
+    touch $DISABLE_MARKER
+    ls -l $DISABLE_MARKER
+    echo ">>> Script '$NAME' disabled..."
+    exit 0
+fi
+
+trap "rm -f $PID_FILE" EXIT
+echo $$ >$PID_FILE
+
+sleep_interval=$((60+RANDOM%6*60))
+
+echo "*** Script '$NAME' running..."
+
+if [[ -f $DISABLE_MARKER ]]; then
+    echo ">>> Script is disabled, please run \`$0 -e' to re-enable..."
+    exit 0
+fi
+
+if [[ -z $NOSLEEP ]]; then
+    echo ">>> Sleeping for $sleep_interval seconds..."
+    sleep $sleep_interval
+fi
+
+echo ">>> Launching repo sync..."
+
+cd $HOME/cm
+$HOME/bin/repo sync -c
+
+# vim: ts=4:et:sts=4:
