@@ -6,3 +6,4 @@
 !./local_manifest.xml
 !bin/repo
 !./envsetup.sh
+!./repo_sync/
