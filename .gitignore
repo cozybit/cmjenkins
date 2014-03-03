@@ -7,3 +7,4 @@
 !bin/repo
 !./envsetup.sh
 !./repo_sync/
+!README.md
