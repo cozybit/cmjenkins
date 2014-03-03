@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<manifest>
+    <project path="vendor/sony" name="TheMuppets/proprietary_vendor_sony" />
+    <project path="external/iw" name="cozybit/iw" />
+    <project path="external/iperf" name="ouya/iperf" revision="master" />
+    <project path="external/meshkit" name="cozybit/meshkit" revision="master" remote="private" />
+    <project path="tools/mesh" name="cozybit/meshable-cyanogenmod" revision="master" remote="private" />
+</manifest>
