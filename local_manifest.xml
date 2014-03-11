@@ -3,7 +3,6 @@
 <manifest>
     <project path="vendor/sony" name="cozybit/proprietary_vendor_sony" />
     <project path="external/iw" name="cozybit/iw" />
-    <project path="external/iperf" name="ouya/iperf" revision="master" />
-    <project path="external/meshkit" name="cozybit/meshkit" revision="master" remote="private" />
-    <project path="tools/mesh" name="cozybit/meshable-cyanogenmod" revision="master" remote="private" />
+    <project path="external/iperf" name="cozybit/iperf" />
+    <project path="tools/mesh" name="cozybit/meshable-cyanogenmod" remote="private" />
 </manifest>
